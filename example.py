@@ -1,4 +1,5 @@
 from query_py.query import create_runner, Types
+from random import choice
 import sqlite3
 
 connection = sqlite3.connect('test.db')
@@ -58,9 +59,11 @@ create_user(name='Lia', age=33)
 create_user(name='Roberto', age=25)
 create_user(name='Carlos', age=55)
 
-for user in get_users():
-    print(user)
+print("All items:")
+print('ID\tNAME\t\tAGE')
+for id, name, age in get_users():
+    print(f'{id}\t{name}\t\t{age}')
 
-roberto = get_user_by_id(user_id=1)
 
-print(roberto)
+print("\nPicking one:")
+print(choice(list(get_users())))

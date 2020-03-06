@@ -11,7 +11,22 @@ class Types(Enum):
     MANIPULATION = 5
 
 
+def get_collection(cursor):
+    '''
+    `get_collection` returns an generator that yields
+    all items `cursor` has
+    '''
+
+    while item:= cursor.fetchone(): # noqa
+        yield item
+
+
 def create_runner(cursor):
+    '''
+    `create_runner` generates a decorator function that is responsible
+    for creating functions that can query on database without calling
+    cursor directly.
+    '''
     def query(type):
         def _decorated(func):
             @wraps(func)
@@ -20,7 +35,7 @@ def create_runner(cursor):
                 cursor.execute(query_text.render(**kwargs))
 
                 collection = {
-                    Types.SELECT: cursor.fetchall(),
+                    Types.SELECT: get_collection(cursor),
                 }
 
                 return collection.get(type, None)
